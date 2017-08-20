@@ -98,5 +98,23 @@ public class Menu {
 		aAfficher.append("\n\nVeuillez specifier votre choix: ");
         System.out.print(aAfficher);
     }
+    
+    
+    public static void displayTypeModificationTaskMenu() {
+    	StringBuilder aAfficher = new StringBuilder();
+    	String separateur = "\n******************************************************";
+    	aAfficher.append(separateur);
+    	aAfficher.append("\nMenu pour la MODIFICATION d'une TACHE");
+    	aAfficher.append(separateur);
+    	aAfficher.append("\n1- Modifier le NOM d'une TACHE");
+    	aAfficher.append("\n2- Modifier la DESCRIPTION d'une TACHE");
+    	aAfficher.append("\n3- Modifier le STATUS d'une TACHE");
+    	aAfficher.append("\n4- Modifier l'ASSIGNATEUR d'une TACHE");
+    	aAfficher.append("\n5- Revenir au MENU PRINCIPAL");
+    	aAfficher.append("\n6- Pour quitter le programme ");
+    	aAfficher.append(separateur);
+		aAfficher.append("\n\nVeuillez specifier votre choix: ");
+        System.out.print(aAfficher);
+    }
    
 }
