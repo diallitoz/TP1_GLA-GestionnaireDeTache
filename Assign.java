@@ -1,18 +1,18 @@
 package task.manager.model;
 
 public class Assign {
-	
+
 	private int id;
 	private int idMember;
 	private int idTask;
-	
+
 	// constructors
 	public Assign() {
-		
+
 	}
 
-	public Assign(int id, int idMember, int idTask) {
-		//super();
+	public Assign(int id, int idTask, int idMember) {
+		// super();
 		this.id = id;
 		this.idMember = idMember;
 		this.idTask = idTask;
@@ -50,5 +50,5 @@ public class Assign {
 	public String toString() {
 		return "Assign [id=" + id + ", id_member=" + idMember + ", id_task=" + idTask + "]";
 	}
-	
+
 }
