@@ -65,8 +65,9 @@ public class MemberUtils {
 		mu.displayList(mList);
 		System.out.println("********************************************************************* ");
 		boolean test = false;
-		do {
-			if (!mList.isEmpty()) {
+
+		if (!mList.isEmpty()) {
+			do {
 				Member memb;
 				int idMember;
 				String input = "";
@@ -96,9 +97,9 @@ public class MemberUtils {
 
 				test = mu.modifyMemberName(mList, idMember);
 
-			}
+			} while (test == false);
 
-		} while (test == false);
+		}
 
 	}
 
@@ -107,8 +108,9 @@ public class MemberUtils {
 		mu.displayList(mList);
 		System.out.println("********************************************************************* ");
 		boolean test = false;
-		do {
-			if (!mList.isEmpty()) {
+
+		if (!mList.isEmpty()) {
+			do {
 				Member memb;
 				int idMember;
 				String input = "";
@@ -142,9 +144,9 @@ public class MemberUtils {
 				} while ((memb == null));
 
 				test = mu.delMember(mList, idMember);
-			}
+			} while (test == false);
 
-		} while (test == false);
+		}
 	}
 
 	// Methode pour afficher Liste membre
@@ -273,44 +275,44 @@ public class MemberUtils {
 			System.out.println("La liste des membres est vide!");
 		}
 	}
-	
+
 	// Methode pour quitter le programme
-		static void quitterProgramme() {
-			System.out.println("\nMerci d'avoir utiliser notre gestionnaire de taches!");
-			System.out.print("Good bye... ");
-			System.exit(-1);
-		}
+	static void quitterProgramme() {
+		System.out.println("\nMerci d'avoir utiliser notre gestionnaire de taches!");
+		System.out.print("Good bye... ");
+		System.exit(-1);
+	}
 
-		public static boolean verifyInput(String entier) {
-			boolean v = false;
-			try {
-				// on essaie de convertir la chaîne en nombre entier
-				Integer.parseInt(entier);
-				// conversion aboutie, v prend la valeur true
-				v = true;
-			} catch (Exception e) {
-				// conversion échouée, levée d'une exception, v prend false
-				v = false;
+	public static boolean verifyInput(String entier) {
+		boolean v = false;
+		try {
+			// on essaie de convertir la chaîne en nombre entier
+			Integer.parseInt(entier);
+			// conversion aboutie, v prend la valeur true
+			v = true;
+		} catch (Exception e) {
+			// conversion échouée, levée d'une exception, v prend false
+			v = false;
+		}
+		// on retourne v
+		return v;
+	}
+
+	static void choixIncorrect() {
+		String cmd;
+		System.out.println("\nVous avez fait un choix non correct");
+		do {
+			System.out.print("Voulez-vous continuer?(o/n): ");
+			cmd = keyb.nextLine();
+			if (!cmd.equals("o") && !cmd.equals("n")) {
+				System.out.println("Veuillez taper soit 'o' pour OUI soit 'n' pour NON ");
 			}
-			// on retourne v
-			return v;
-		}
-		
-		static void choixIncorrect() {
-			String cmd;
-			System.out.println("\nVous avez fait un choix non correct");
-			do {
-				System.out.print("Voulez-vous continuer?(o/n): ");
-				cmd = keyb.nextLine();
-				if (!cmd.equals("o") && !cmd.equals("n")) {
-					System.out.println("Veuillez taper soit 'o' pour OUI soit 'n' pour NON ");
-				}
 
-				if (cmd.equals("n")) {
-					quitterProgramme();
-				}
+			if (cmd.equals("n")) {
+				quitterProgramme();
+			}
 
-			} while (!cmd.toUpperCase().equals("O") && !cmd.toUpperCase().equals("N"));
-		}	
-	
+		} while (!cmd.toUpperCase().equals("O") && !cmd.toUpperCase().equals("N"));
+	}
+
 }

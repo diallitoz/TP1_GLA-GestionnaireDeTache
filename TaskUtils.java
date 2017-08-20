@@ -13,7 +13,7 @@ public class TaskUtils {
 	static MemberUtils mu = new MemberUtils();
 	static TaskUtils tu = new TaskUtils();
 	static AssignUtils au = new AssignUtils();
-	//static TaskManager tk = new TaskManager();
+	// static TaskManager tk = new TaskManager();
 
 	///////////////// GESTION DES TACHES
 
@@ -28,13 +28,13 @@ public class TaskUtils {
 				creerTache(tList);
 
 			} else if (itemMenu.equals("2")) {
-				modifierTache(tList);
+				modifierTache(tList, mList, aList);
 
 			} else if (itemMenu.equals("3")) {
 				supprimerTache(tList);
 
 			} else if (itemMenu.equals("4")) {
-				ajouterTache();
+				assignerTache(tList, mList, aList);
 
 			} else if (itemMenu.equals("5")) {
 				assignerTache(tList, mList, aList);
@@ -73,12 +73,161 @@ public class TaskUtils {
 	}
 
 	// Methode pour modifier une tache
-	static void modifierTache(ArrayList<Task> tList) {
+	public void modifierTache(ArrayList<Task> tList, ArrayList<Member> mList, ArrayList<Assign> aList) {
 		tu.displayList(tList);
+
+		System.out.println("********************************************************************* ");
+		boolean test = false;
+
 		if (!tList.isEmpty()) {
-			Menu.displayTypeModificationTaskMenu();
+
+			do {
+
+				Task task;
+				int idTask;
+				String input = "";
+
+				do {
+
+					do {
+
+						System.out.print("\nSaisir l'identifiant de la tache à modifier : ");
+						input = keyb.nextLine();
+						if (!verifyInput(input)) {
+							System.out.println("Saisie incorrecte, veuiller reprendre");
+						}
+
+					} while (!verifyInput(input));
+
+					idTask = Integer.parseInt(input);
+
+					task = tu.getTaskById(tList, idTask);
+
+					if (task == null) {
+						System.out.print("\nLa tache que vous avez specifee n'existe pas dans la liste des taches ");
+						System.out.println("\nMerci de selectionner une tache existante ");
+					}
+
+				} while ((task == null));
+
+				boolean cmd4 = true;
+				do {
+
+					Menu.displayTypeModificationTaskMenu();
+					String itemMenu1 = keyb.nextLine();
+					if (itemMenu1.equals("1")) {
+
+						test = modifyTaskName(task);
+						cmd4 = false;
+
+					} else if (itemMenu1.equals("2")) {
+
+						test = modifyTaskDescription(task);
+						cmd4 = false;
+
+					} else if (itemMenu1.equals("3")) {
+
+						test = modifyTaskStatus(task);
+						cmd4 = false;
+
+					} else if (itemMenu1.equals("4")) {
+
+						assignerTache(tList, mList, aList);
+
+					}
+
+					else if (itemMenu1.equals("5")) {
+						cmd4 = false;
+						test = true;
+						// Menu.displayPrincipalMenu();
+					} else if (itemMenu1.equals("6")) {
+						quitterProgramme();
+					}
+
+					else if (!itemMenu1.equals("1") && !itemMenu1.equals("2") && !itemMenu1.equals("3")
+							&& !itemMenu1.equals("4") && !itemMenu1.equals("5") && !itemMenu1.equals("6")) {
+						choixIncorrect();
+					}
+
+				} while (cmd4);
+			} while (test == false);
+		}
+
+	}
+
+	public void rechercherTache(ArrayList<Task> tList, ArrayList<Member> mList, ArrayList<Assign> aList) {
+		String itemMenu = "0";
+		// tu.displayList(tList);
+		if (!tList.isEmpty()) {
+
+			boolean cmd3 = true;
+			do {
+
+				// affichage du Menu pour la recherche des taches
+
+				Menu.displayTypeSearchTaskMenu();
+
+				itemMenu = keyb.nextLine();
+				if (itemMenu.equals("1")) {
+
+					System.out.println("Les taches assignees par membre est : ");
+
+					au.displayList(aList);
+
+				} else if (itemMenu.equals("2")) {
+
+					boolean cmd4 = true;
+					do {
+
+						Menu.displayTaskStatusMenu();
+						String itemMenu1 = keyb.nextLine();
+						if (itemMenu1.equals("1")) {
+
+							displayListTachByStatusNouveau(tList);
+
+						} else if (itemMenu1.equals("2")) {
+
+							displayListTachByStatusEnProgres(tList);
+
+						} else if (itemMenu1.equals("3")) {
+
+							displayListTachByStatusTermine(tList);
+
+						} else if (itemMenu1.equals("4")) {
+							cmd4 = false;
+						} else if (itemMenu1.equals("5")) {
+							cmd4 = false;
+							cmd3 = false;
+							// Menu.displayPrincipalMenu();
+						}
+
+						else if (itemMenu1.equals("6")) {
+							quitterProgramme();
+						}
+
+						else if (!itemMenu1.equals("1") && !itemMenu1.equals("2") && !itemMenu1.equals("3")
+								&& !itemMenu1.equals("4") && !itemMenu1.equals("5") && !itemMenu1.equals("6")) {
+							choixIncorrect();
+						}
+
+					} while (cmd4);
+
+				} else if (itemMenu.equals("3")) {
+					cmd3 = false;
+				} else if (itemMenu.equals("4")) {
+					quitterProgramme();
+				} else if (!itemMenu.equals("1") && !itemMenu.equals("2") && !itemMenu.equals("3")
+						&& !itemMenu.equals("4")) {
+					choixIncorrect();
+				}
+			} while (cmd3);
 
 		}
+
+		else {
+			tu.displayList(tList);
+		}
+
 	}
 
 	// Methode pour supprimer une tache
@@ -86,8 +235,9 @@ public class TaskUtils {
 		tu.displayList(tList);
 		System.out.println("********************************************************************* ");
 		boolean test = false;
-		do {
-			if (!tList.isEmpty()) {
+
+		if (!tList.isEmpty()) {
+			do {
 				Task task;
 				int idTask;
 				String input = "";
@@ -116,9 +266,9 @@ public class TaskUtils {
 				} while ((task == null));
 
 				test = tu.delTask(tList, idTask);
-			}
+			} while (test == false);
 
-		} while (test == false);
+		}
 	}
 
 	// Methode pour afficher la liste des taches
@@ -135,8 +285,8 @@ public class TaskUtils {
 		mu.afficherListeMembre(mList);
 		System.out.println("\n****************************************************************** ");
 
-		do {
-			if (!tList.isEmpty() && !mList.isEmpty()) {
+		if (!tList.isEmpty() && !mList.isEmpty()) {
+			do {
 				int idTask;
 				int idMember;
 				Task task;
@@ -204,8 +354,8 @@ public class TaskUtils {
 					// System.out.println(newAssign);
 
 				}
-			}
-		} while (test == false);
+			} while (test == false);
+		}
 
 	}
 
@@ -250,9 +400,9 @@ public class TaskUtils {
 		}
 	}
 
-	public boolean modifyTaskName(ArrayList<Task> aList, int id) {
+	public boolean modifyTaskName(Task task) {
 		String rep = "";
-		Task task = getTaskById(aList, id);
+		// Task task = getTaskById(aList, id);
 		if (task != null) {
 			System.out.print("Veuiller saisir le NOUVEAU NOM de la tache : ");
 			rep = keyb.nextLine();
@@ -272,17 +422,17 @@ public class TaskUtils {
 
 	}
 
-	public boolean modifyTaskDescription(ArrayList<Task> aList, int id) {
+	public boolean modifyTaskDescription(Task task) {
 		String rep = "";
-		Task task = getTaskById(aList, id);
+		// Task task = getTaskById(aList, id);
 		if (task != null) {
-			System.out.print("Veuiller saisir la NOUVELLE DESCRIPTION de la tache : ");
+			System.out.print("Veuiller saisir la NOUVELLE DESCRIPTION  de la tache : ");
 			rep = keyb.nextLine();
 			if (rep.trim().equals("")) {
 				System.out.println("Saisie de nom incorrecte!");
 				return false;
 			} else {
-				task.setName(rep);
+				task.setDescription(rep);
 				System.out.println("Modification effectuee avec SUCCES!");
 				return true;
 			}
@@ -294,19 +444,30 @@ public class TaskUtils {
 
 	}
 
-	public boolean modifyTaskStatus(ArrayList<Task> aList, int id) {
+	public boolean modifyTaskStatus(Task task) {
 		String rep = "";
-		Task task = getTaskById(aList, id);
+		// Task task = getTaskById(aList, id);
 		if (task != null) {
-			System.out.print("Veuiller saisir la NOUVELLE DESCRIPTION de la tache : ");
+			System.out.print("Veuiller choisir le STATUS la de la tache : ");
+			Menu.displaySetStatusTaskMenu();
 			rep = keyb.nextLine();
-			if (rep.trim().equals("")) {
-				System.out.println("Saisie de nom incorrecte!");
-				return false;
-			} else {
-				task.setName(rep);
+			if (rep.equals("1")) {
+				task.setStatus("NOUVEAU");
 				System.out.println("Modification effectuee avec SUCCES!");
 				return true;
+			} else if (rep.equals("2")) {
+				task.setStatus("EN_PROGRES");
+				System.out.println("Modification effectuee avec SUCCES!");
+				return true;
+			} else if (rep.equals("3")) {
+				task.setStatus("TERMINE");
+				System.out.println("Modification effectuee avec SUCCES!");
+				return true;
+			}
+
+			else {
+				choixIncorrect();
+				return false;
 			}
 
 		} else {
@@ -352,7 +513,7 @@ public class TaskUtils {
 											// Mais cela n,est qu'un choix de
 											// conception, Tout depend
 											// de l'objectif de l'utilisateur
-					System.out.print("Suppression effectuee!");
+					System.out.print("\nSuppression effectuee!");
 					return true;
 
 				} else if (rep.equals("n")) {
@@ -365,7 +526,7 @@ public class TaskUtils {
 			} while (!rep.toUpperCase().equals("O") && !rep.toUpperCase().equals("N"));
 
 		} else {
-			System.out.print("Cette tache n'existe pas!");
+			System.out.print("\nCette tache n'existe pas!");
 			return false;
 		}
 	}
@@ -382,7 +543,7 @@ public class TaskUtils {
 
 	public void displayList(ArrayList<Task> aList) {
 		if (!aList.isEmpty()) {
-			System.out.println("La liste des taches est :");
+			System.out.println("\nLa liste des taches est :");
 			System.out.println("------------------------------------------------------------------------- ");
 			System.out.print("ID    |   NOM  -   DESCRIPTION  -  STATUS  -  ASSIGNE\n");
 			for (Task task : aList) {
@@ -391,16 +552,68 @@ public class TaskUtils {
 						+ "  -   " + task.getStatus() + "  -   " + task.getAssignStatus() + "\n");
 			}
 		} else {
-			System.out.println("La liste des taches est vide!");
+			System.out.println("\nLa liste des taches est vide!");
 		}
 	}
-	
-	
-	/*// Methode pour afficher Liste membre
-		static void afficherListeMembre() {
-			mu.displayList(mList);
+
+	public void displayListTachByStatusNouveau(ArrayList<Task> tList) {
+		if (!tList.isEmpty()) {
+			System.out.println("\nLa liste des nouvelles taches est :");
+			System.out.println("------------------------------------------------------------------------- ");
+			System.out.print("ID    |   NOM  -   DESCRIPTION  -  STATUS\n");
+			for (Task task : tList) {
+				if (task.getStatus().equals("NOUVEAU")) {
+					System.out.println("------------------------------------------------------------------------- ");
+					System.out.print(task.getId() + "     |   " + task.getName() + "  -   " + task.getDescription()
+							+ "  -   " + task.getStatus() + "\n");
+
+				}
+			}
+		} else {
+			System.out.println("\nLa liste des taches est vide!");
 		}
-*/
+	}
+
+	public void displayListTachByStatusEnProgres(ArrayList<Task> tList) {
+		if (!tList.isEmpty()) {
+			System.out.println("\nLa liste des taches en progres est :");
+			System.out.println("------------------------------------------------------------------------- ");
+			System.out.print("ID    |   NOM  -   DESCRIPTION  -  STATUS\n");
+			for (Task task : tList) {
+				if (task.getStatus().equals("EN_PROGRES")) {
+					System.out.println("------------------------------------------------------------------------- ");
+					System.out.print(task.getId() + "     |   " + task.getName() + "  -   " + task.getDescription()
+							+ "  -   " + task.getStatus() + "\n");
+
+				}
+			}
+		} else {
+			System.out.println("\nLa liste des taches est vide!");
+		}
+	}
+
+	public void displayListTachByStatusTermine(ArrayList<Task> tList) {
+		if (!tList.isEmpty()) {
+			System.out.println("\nLa liste des taches terminees est :");
+			System.out.println("------------------------------------------------------------------------- ");
+			System.out.print("ID    |   NOM  -   DESCRIPTION  -  STATUS\n");
+			for (Task task : tList) {
+				if (task.getStatus().equals("TERMINE")) {
+					System.out.println("------------------------------------------------------------------------- ");
+					System.out.print(task.getId() + "     |   " + task.getName() + "  -   " + task.getDescription()
+							+ "  -   " + task.getStatus() + "\n");
+
+				}
+			}
+		} else {
+			System.out.println("\nLa liste des taches est vide!");
+		}
+	}
+
+	/*
+	 * // Methode pour afficher Liste membre static void afficherListeMembre() {
+	 * mu.displayList(mList); }
+	 */
 	// Methode pour quitter le programme
 	static void quitterProgramme() {
 		System.out.println("\nMerci d'avoir utiliser notre gestionnaire de taches!");
